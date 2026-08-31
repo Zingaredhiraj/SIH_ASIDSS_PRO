@@ -11,7 +11,12 @@ from ws import telemetry_ws, incident_ws
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await create_indexes()
+    try:
+        await create_indexes()
+        print("[INFO] MongoDB indexes verified successfully.")
+    except Exception as e:
+        print(f"[WARN] MongoDB startup index creation skipped (will connect when cluster is ready): {e}")
+    
     asyncio.create_task(run_telemetry_simulator())
     yield
 
@@ -19,13 +24,11 @@ app = FastAPI(
     title="Antarctic Station Digital Platform",
     version="1.0.0",
     lifespan=lifespan,
-    # In production Render deployment, disable the interactive docs if desired:
-    # docs_url=None, redoc_url=None
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=settings.CORS_ORIGINS if isinstance(settings.CORS_ORIGINS, list) else ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -41,7 +44,7 @@ app.include_router(emergency.router, prefix="/api")
 app.include_router(digital_twin.router, prefix="/api")
 app.include_router(admin.router, prefix="/api")
 
-# WebSocket routers — prefix must match what frontend connects to
+# WebSocket routers
 app.include_router(telemetry_ws.router, prefix="/ws/telemetry", tags=["WebSockets"])
 app.include_router(incident_ws.router, prefix="/ws/incidents", tags=["WebSockets"])
 
@@ -76,8 +79,6 @@ async def health_check():
         "dataDisclaimer": "This platform uses simulated data for demonstration purposes only."
     }
 
-# Entry point for direct execution and Render deployment
-# Render injects PORT environment variable automatically
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8000))

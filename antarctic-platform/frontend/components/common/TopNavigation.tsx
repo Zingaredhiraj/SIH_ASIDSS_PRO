@@ -103,22 +103,32 @@ export function TopNavigation() {
         {/* Clock */}
         <div className="hidden lg:block"><LiveClock /></div>
 
-        {/* User */}
-        {user && (
+        {/* User & Logout */}
+        {user ? (
           <div className="flex items-center gap-2.5 pl-3 border-l border-[#E4EBF2]">
-            <div className="user-avatar text-[11px]">{initials}</div>
-            <div className="hidden md:block leading-tight">
+            <div className="user-avatar text-[11px] font-bold">{initials}</div>
+            <div className="hidden xl:block leading-tight">
               <div className="text-[12.5px] font-bold text-[#12233B]">{user.name}</div>
               <div className="text-[11px] text-[#64748B]">{ROLE_LABELS[user.role] || user.role}</div>
             </div>
             <button
               onClick={logout}
-              className="p-1.5 text-[#94A3B8] hover:text-[#DC5B54] hover:bg-red-50 rounded-lg transition-all duration-150 ml-1"
-              title="Sign out"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 text-[12px] font-semibold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100/80 border border-rose-200/70 rounded-xl transition-all duration-150 shadow-sm ml-1 cursor-pointer"
+              title="Sign out of Antarctic Platform"
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Logout</span>
             </button>
           </div>
+        ) : (
+          <button
+            onClick={logout}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-semibold text-rose-600 hover:text-rose-700 bg-rose-50 border border-rose-200/70 rounded-xl transition-all cursor-pointer"
+            title="Sign out"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Logout</span>
+          </button>
         )}
       </div>
     </header>

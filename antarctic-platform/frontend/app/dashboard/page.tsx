@@ -7,6 +7,8 @@ import { ResourceGauge } from '@/components/energy/ResourceGauge'
 import { WhatIfLab } from '@/components/energy/WhatIfLab'
 import { AIReportPanel } from '@/components/energy/AIReportPanel'
 import { LiveIndicator } from '@/components/common/LiveIndicator'
+import { useAuth } from '@/lib/auth/AuthContext'
+import { LogOut } from 'lucide-react'
 
 const BHARATI_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Bharati_permanent_Antarctic_research_station.jpg/1280px-Bharati_permanent_Antarctic_research_station.jpg'
 const MAITRI_URL  = 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/An_ariel_view_of_the_Indian_Station_Maitri%2C_Antarctica_on_February_2%2C2005_%281%29.jpg/1280px-An_ariel_view_of_the_Indian_Station_Maitri%2C_Antarctica_on_February_2%2C2005_%281%29.jpg'
@@ -28,6 +30,7 @@ const KPI_COLORS = [
 
 export default function DashboardPage() {
   const { stationId } = useStation()
+  const { logout, user } = useAuth()
   const { data: socketData, status } = useTelemetrySocket(stationId)
 
   // Resilient fallback values so UI never hangs on loading skeletons
@@ -84,6 +87,14 @@ export default function DashboardPage() {
             <span>{stationName} Station Online</span>
             <LiveIndicator status={status} />
           </div>
+          <button
+            onClick={logout}
+            className="flex items-center gap-1.5 px-3 py-2 text-[12.5px] font-bold text-rose-600 hover:text-rose-700 bg-white hover:bg-rose-50 border border-rose-200 rounded-[11px] shadow-sm transition-all duration-150 cursor-pointer"
+            title="Sign out of station operations"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>Sign Out</span>
+          </button>
         </div>
       </div>
 

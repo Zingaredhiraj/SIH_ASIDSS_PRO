@@ -11,8 +11,56 @@ class LoginRequest(BaseModel):
     email: str
     password: str
 
+class RegisterRequest(BaseModel):
+    name: str = ""
+    email: str
+    password: str
+    role: str = "operator"
+    station: str = "maitri"
+
 class RefreshRequest(BaseModel):
     refresh_token: str
+
+@router.post("/auth/register")
+async def register(req: RegisterRequest):
+    from core.security import hash_password
+    col = get_users_col()
+    
+    clean_email = req.email.strip().lower()
+    if not clean_email or not req.password:
+        raise HTTPException(status_code=400, detail="Email and password are required")
+        
+    existing = await col.find_one({"email": clean_email})
+    if existing:
+        raise HTTPException(status_code=400, detail="An account with this email already exists")
+    
+    valid_roles = ["admin", "operator", "scientist", "security_officer", "ncpor_hq"]
+    assigned_role = req.role if req.role in valid_roles else "operator"
+    display_name = req.name.strip() if req.name.strip() else clean_email.split("@")[0].capitalize()
+    
+    user_doc = {
+        "name": display_name,
+        "email": clean_email,
+        "hashed_password": hash_password(req.password),
+        "role": assigned_role,
+        "station": req.station or "maitri"
+    }
+    
+    res = await col.insert_one(user_doc)
+    user_doc["_id"] = str(res.inserted_id)
+    del user_doc["hashed_password"]
+    
+    access_token = create_access_token({"sub": user_doc["email"]})
+    refresh_token = create_refresh_token({"sub": user_doc["email"]})
+    
+    await log_action(user_doc["_id"], user_doc["role"], "REGISTER", "SYSTEM", "SUCCESS")
+    
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "user": user_doc,
+        "message": "Account created successfully"
+    }
 
 @router.post("/auth/login")
 async def login(req: LoginRequest):

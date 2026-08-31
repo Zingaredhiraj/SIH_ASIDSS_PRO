@@ -8,7 +8,29 @@ export async function login(email: string, password: string): Promise<{access_to
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password })
   });
-  if (!res.ok) throw new Error('Login failed');
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || 'Login failed');
+  }
+  return res.json();
+}
+
+export async function register(userData: {
+  name?: string;
+  email: string;
+  password: string;
+  role?: string;
+  station?: string;
+}): Promise<{ access_token: string; user: User; message: string }> {
+  const res = await fetch(`${API_BASE}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(userData)
+  });
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || 'Registration failed');
+  }
   return res.json();
 }
 

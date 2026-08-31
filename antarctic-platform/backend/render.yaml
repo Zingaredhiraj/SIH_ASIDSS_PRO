@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: antarctic-platform-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: MONGO_URL
+        sync: false          # Set this in Render dashboard — your Atlas URI
+      - key: MONGO_DB
+        value: antarctic_platform
+      - key: JWT_SECRET
+        sync: false          # Set a strong random secret in Render dashboard
+      - key: JWT_ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "60"
+      - key: REFRESH_TOKEN_EXPIRE_DAYS
+        value: "7"
+      - key: GROQ_API_KEY
+        sync: false          # Optional — leave empty for offline AI fallback
+      - key: CORS_ORIGINS
+        sync: false          # Set after Vercel deploy: ["https://your-app.vercel.app"]
+      - key: TELEMETRY_INTERVAL_SECONDS
+        value: "5"

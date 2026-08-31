@@ -1,0 +1,224 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   ANTARCTICA DESIGN SYSTEM — CSS Variables
+   ============================================================ */
+:root {
+  --navy:   #12233B;
+  --ice:    #EAF4FC;
+  --cyan:   #2F8FE0;
+  --teal:   #17A88E;
+  --bg:     #F5F8FB;
+  --bg-secondary: #EFF4F9;
+  --white:  #FFFFFF;
+  --border: #E4EBF2;
+  --text:   #12233B;
+  --text-muted: #64748B;
+  --text-faint: #94A3B8;
+  --green:  #17A88E;
+  --amber:  #D9A441;
+  --orange: #E08A3C;
+  --red:    #DC5B54;
+  --blue:   #2F8FE0;
+  --purple: #8B6FE0;
+
+  --shadow-sm:   0 1px 2px rgba(18,35,59,0.04), 0 1px 1px rgba(18,35,59,0.03);
+  --shadow-md:   0 6px 20px rgba(18,35,59,0.06);
+  --shadow-lift: 0 14px 34px rgba(18,35,59,0.12);
+}
+
+/* ─── Base ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background:
+    radial-gradient(1100px 500px at 100% -8%, rgba(47,143,224,0.07), transparent 60%),
+    radial-gradient(900px 500px at -10% 10%, rgba(23,168,142,0.06), transparent 55%),
+    #F5F8FB;
+  color: var(--navy);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img { max-width: 100%; display: block; }
+button { font-family: inherit; cursor: pointer; }
+a { text-decoration: none; color: inherit; }
+::selection { background: var(--cyan); color: #fff; }
+
+/* ─── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+
+/* ─── App Wallpaper ─────────────────────────────────────────── */
+.app-wallpaper {
+  position: fixed; inset: 0; z-index: -1;
+  background-image:
+    linear-gradient(180deg, rgba(245,248,251,0.94) 0%, rgba(245,248,251,0.97) 55%, rgba(245,248,251,1) 100%),
+    url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/An_ariel_view_of_the_Indian_Station_Maitri%2C_Antarctica_on_February_2%2C2005_%281%29.jpg/1280px-An_ariel_view_of_the_Indian_Station_Maitri%2C_Antarctica_on_February_2%2C2005_%281%29.jpg');
+  background-size: cover;
+  background-position: center top;
+  background-attachment: fixed;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LOGIN SCREEN
+   ═══════════════════════════════════════════════════════════ */
+.login-aurora {
+  position: absolute; z-index: 2; top: -8%; left: -10%; right: -10%; height: 50%;
+  background: conic-gradient(from 200deg at 50% 0%, transparent 0deg, rgba(85,194,232,0.30) 90deg, rgba(43,179,163,0.24) 180deg, transparent 260deg);
+  filter: blur(28px);
+  mix-blend-mode: screen;
+  animation: aurora-drift 22s ease-in-out infinite alternate;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TOP NAVIGATION BAR
+   ═══════════════════════════════════════════════════════════ */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: 28px;
+  padding: 0 32px;
+  height: 56px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-nav-link {
+  padding: 8px 12px; border-radius: 9px;
+  font-size: 13px; font-weight: 600;
+  color: var(--text-muted);
+  transition: color 0.15s ease, background-color 0.15s ease;
+  position: relative;
+  white-space: nowrap;
+}
+.topbar-nav-link:hover { color: var(--navy); background: rgba(18,35,59,0.04); }
+.topbar-nav-link.active { color: var(--cyan); }
+.topbar-nav-link.active::after {
+  content: ''; position: absolute;
+  left: 12px; right: 12px; bottom: -17px;
+  height: 2px; background: var(--cyan);
+  border-radius: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT DESIGN SYSTEM
+   ═══════════════════════════════════════════════════════════ */
+@layer components {
+
+  /* Panel / Card */
+  .panel-card {
+    @apply bg-white border border-[#E4EBF2] rounded-[20px] shadow-card;
+  }
+  .panel-card-hover {
+    @apply panel-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md;
+  }
+  .polar-panel {
+    @apply bg-white border border-[#E4EBF2] rounded-[20px] shadow-card;
+  }
+
+  /* KPI Card */
+  .kpi-card {
+    @apply bg-white border border-[#E4EBF2] rounded-[16px] p-[18px] shadow-card
+           transition-all duration-200 hover:-translate-y-[3px] hover:shadow-md hover:border-[#2F8FE0];
+  }
+
+  /* Sector Card */
+  .sector-card {
+    @apply bg-white border border-[#E4EBF2] rounded-[16px] p-5 shadow-card cursor-pointer
+           transition-all duration-200 hover:-translate-y-[3px] hover:shadow-md hover:border-[#2F8FE0];
+  }
+
+  /* Station filter pills */
+  .station-filter-btn {
+    @apply px-4 py-2 text-[12.5px] font-semibold border-none bg-transparent rounded-[8px] text-[#64748B]
+           transition-all duration-150 cursor-pointer;
+  }
+  .station-filter-btn.active {
+    @apply bg-[#12233B] text-white;
+  }
+
+  /* Status pill (online indicator) */
+  .status-pill-online {
+    @apply flex items-center gap-2 bg-[#17A88E] text-white text-[12.5px] font-bold
+           px-4 py-2.5 rounded-[11px] shadow-teal;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply w-full py-3 border-none rounded-[10px] bg-[#12233B] text-white
+           font-bold text-[13.5px] transition-all duration-150
+           hover:opacity-90 active:scale-[0.98];
+  }
+
+  /* Field input */
+  .field-input {
+    @apply w-full px-[14px] py-[11px] rounded-[10px] border border-[#E4EBF2]
+           bg-white text-[#12233B] text-[13.5px] outline-none
+           transition-all duration-200
+           focus:border-[#2F8FE0] focus:ring-[3px] focus:ring-[rgba(47,143,224,0.14)]
+           placeholder:text-[#94A3B8];
+  }
+
+  /* User avatar */
+  .user-avatar {
+    @apply w-8 h-8 rounded-full flex items-center justify-center
+           text-white text-xs font-bold flex-shrink-0;
+    background: linear-gradient(135deg, #2F8FE0, #17A88E);
+  }
+
+  /* Alert row */
+  .alert-icon-badge {
+    @apply w-7 h-7 rounded-[8px] flex items-center justify-center flex-shrink-0;
+  }
+
+  /* Section heading */
+  .panel-head {
+    @apply flex items-center justify-between mb-4;
+  }
+  .panel-head h3 {
+    @apply font-display text-[15px] font-extrabold text-[#12233B];
+  }
+
+  /* Skeleton */
+  .skeleton {
+    background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+    background-size: 1000px 100%;
+    animation: shimmer 1.8s infinite linear;
+    border-radius: 8px;
+  }
+}
+
+/* ─── Animations ─────────────────────────────────────────────── */
+.page-enter { animation: fadeIn 0.25s ease-out; }
+
+/* ─── Live dot pulse ─────────────────────────────────────────── */
+.live-dot-teal {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 0 0 rgba(23,168,142,0.6);
+  animation: pulseDot 2s ease-out infinite;
+}
+.live-dot-white {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #fff;
+  animation: pulseDot-white 2s ease-out infinite;
+}
+@keyframes pulseDot-white {
+  0%   { box-shadow: 0 0 0 0 rgba(255,255,255,0.55); }
+  70%  { box-shadow: 0 0 0 7px rgba(255,255,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+}
+
+/* ─── Station card thumb ─────────────────────────────────────── */
+.station-thumb::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(0deg, rgba(9,22,34,0.55), rgba(9,22,34,0.05) 65%);
+}
